@@ -1,78 +1,146 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borang Pendaftaran Team Assaif</title>
-    <style>
-        body {
-            background-color: burlywood;
-            font-family: Arial, sans-serif;
-        }
-        form {
-            width: 350px;
-            margin: auto;
-            background-color: #fff8dc;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        input {
-            margin: 10px 0;
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-        h1, p {
-            text-align: center;
-        }
-        input[type="radio"] {
-            width: auto;
-        }
-        input[type="submit"] {
-            background-color: #8b4513;
-            color: white;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Borang Pendaftaran - Team Assaif</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: url('IMG-20250715-WA0065.jpg') no-repeat center center fixed;
+      background-size: cover;
+      backdrop-filter: blur(2px);
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: scale(0.95);}
+      to {opacity: 1; transform: scale(1);}
+    }
+    .form-page { display: none; }
+    .form-page.active { display: block; }
+    h2 { text-align: center; color: #4b2e2e; }
+    label { display: block; margin-top: 15px; font-weight: bold; color: #333; }
+    input[type="text"], input[type="tel"], input[type="number"],
+    textarea, select {
+      width: 100%; padding: 10px; margin-top: 5px;
+      border: 1px solid #ccc; border-radius: 8px;
+    }
+    textarea { resize: vertical; }
+    .checkbox-group, .radio-group { margin-top: 10px; }
+    .buttons { margin-top: 25px; display: flex; justify-content: space-between; }
+    .buttons button {
+      padding: 10px 20px; background-color: #8b4513; color: white;
+      border: none; border-radius: 8px; cursor: pointer;
+      font-weight: bold;
+    }
+    .buttons button:hover { background-color: #5a2e0f; }
+    .submit-btn { background-color: #28a745; }
+    .submit-btn:hover { background-color: #1e7e34; }
+  </style>
 </head>
 <body>
-    <h1>Borang Pendaftaran Team Assaif</h1>
-    <p>Isi borang dengan maklumat yang betul</p>
-    <form action="Server_URL" method="post" enctype="multipart/form-data">
-        <fieldset>
-            <label for="firstname">Nama Pertama:</label>
-            <input type="text" id="firstname" name="firstname" required>
+  <form id="msForm" class="form-container" method="POST" action="#">
+    <!-- Page 1: Maklumat Asas -->
+    <div class="form-page active">
+      <h2>MAKLUMAT ASAS</h2>
+      <label>1. Nama penuh:</label><input type="text" name="nama_penuh" required>
+      <label>2. No. Kad / Pelajar:</label><input type="text" name="nokp" required>
+      <label>3. Umur:</label><input type="number" name="umur" required>
+      <label>4. Jantina:</label><input type="text" name="jantina" required>
+      <label>5. No. Telefon (WhatsApp):</label><input type="tel" name="telefon" required>
+      <label>6. Nama Sekolah / Institusi:</label><input type="text" name="institusi" required>
+      <div class="buttons"><span></span><button type="button" onclick="nextPage()">Seterusnya</button></div>
+    </div>
+    <!-- Page 2 -->
+    <div class="form-page">
+      <h2>MAKLUMAT PENGAJIAN & LATAR BELAKANG</h2>
+      <label>7. Tahap pendidikan terkini:</label><input type="text" name="pendidikan" required>
+      <label>8. Kelas / Kursus / Fakulti:</label><input type="text" name="kelas" required>
+      <label>9. Keputusan peperiksaan terkini:</label><textarea name="peperiksaan" rows="3"></textarea>
+      <div class="buttons"><button type="button" onclick="prevPage()">Kembali</button>
+        <button type="button" onclick="nextPage()">Seterusnya</button></div>
+    </div>
+    <!-- Page 3 -->
+    <div class="form-page">
+      <h2>MAKLUMAT PERANAN & MINAT</h2>
+      <label>10. Jawatan ingin dipohon:</label><input type="text" name="jawatan" required>
+      <label>11. Bidang diminati (tanda √):</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="minat[]" value="Dakwah"> Dakwah</label>
+        <label><input type="checkbox" name="minat[]" value="Multimedia"> Multimedia</label>
+        <label><input type="checkbox" name="minat[]" value="Kebajikan"> Kebajikan</label>
+        <label><input type="checkbox" name="minat[]" value="Program & Aktiviti"> Program & Aktiviti</label>
+        <label><input type="checkbox" name="minat[]" value="Pengurusan & Dokumentasi"> Pengurusan & Dokumentasi</label>
+        <label><input type="checkbox" name="minat[]" value="Teknikal/IT"> Teknikal/IT</label>
+      </div>
+      <label>12. Bersedia bekerja dalam kumpulan & menerima arahan?</label>
+      <div class="radio-group">
+        <label><input type="radio" name="kerja_kumpulan" value="Ya" required> Ya</label>
+        <label><input type="radio" name="kerja_kumpulan" value="Tidak"> Tidak</label>
+      </div>
+      <div class="buttons"><button type="button" onclick="prevPage()">Kembali</button>
+        <button type="button" onclick="nextPage()">Seterusnya</button></div>
+    </div>
+    <!-- Page 4 -->
+    <div class="form-page">
+      <h2>PENGALAMAN & KEMAHIRAN</h2>
+      <label>13. Pengalaman organisasi / program:</label><textarea name="pengalaman" rows="3"></textarea>
+      <label>14. Kemahiran yang anda miliki:</label><textarea name="kemahiran" rows="2"></textarea>
+      <label>15. Boleh kendalikan media sosial / reka grafik / video / pentas / mikrofon?</label>
+      <div class="radio-group">
+        <label><input type="radio" name="kendali_media" value="Ya" required> Ya</label>
+        <label><input type="radio" name="kendali_media" value="Tidak"> Tidak</label>
+      </div>
+      <div class="buttons"><button type="button" onclick="prevPage()">Kembali</button>
+        <button type="button" onclick="nextPage()">Seterusnya</button></div>
+    </div>
+    <!-- Page 5 -->
+    <div class="form-page">
+      <h2>MOTIVASI & PENDIRIAN</h2>
+      <label>16. Kenapa anda berminat sertai Team Assaif?</label><textarea name="motivasi" rows="3" required></textarea>
+      <label>17. Sumbangan utama anda kepada team:</label><textarea name="sumbangan" rows="2"></textarea>
+      <label>18. Harapan anda jika diterima sebagai ahli:</label><textarea name="harapan" rows="2"></textarea>
+      <label>19. Sanggup beri komitmen masa / tenaga / idea?</label>
+      <div class="radio-group">
+        <label><input type="radio" name="komitmen" value="Ya sepenuhnya" required> Ya sepenuhnya</label>
+        <label><input type="radio" name="komitmen" value="Bergantung kepada masa"> Bergantung kepada masa</label>
+        <label><input type="radio" name="komitmen" value="Tidak pasti"> Tidak pasti</label>
+      </div>
+      <label>20. Jika cabaran / konflik dalam team, apa tindakan anda?</label><textarea name="konflik" rows="2"></textarea>
+      <div class="buttons"><button type="button" onclick="prevPage()">Kembali</button>
+        <button type="submit" class="submit-btn">Hantar</button></div>
+    </div>
+  </form>
 
-            <label for="lastname">Nama Terakhir:</label>
-            <input type="text" id="lastname" name="lastname" required>
-
-            <label for="password">Kata Laluan:</label>
-            <input type="password" id="password" name="password" minlength="8" maxlength="20" required>
-
-            <label for="number">Nombor Telefon:</label>
-            <input type="tel" id="number" name="number" required>
-
-            <label>Jantina:</label>
-            <input type="radio" id="male" name="gender" value="Lelaki" required> Lelaki
-            <input type="radio" id="female" name="gender" value="Perempuan" required> Perempuan
-
-            <label for="birthday">Tarikh Lahir:</label>
-            <input type="date" id="birthday" name="birthday" required>
-
-            <label for="gambar">Muat Naik Gambar:</label>
-            <input type="file" id="gambar" name="gambar" required>
-
-            <input type="submit" value="Hantar">
-        </fieldset>
-    </form>
+  <script>
+    let currentPage = 0;
+    const pages = document.querySelectorAll('.form-page');
+    function showPage(i) {
+      pages.forEach((p, idx) => p.classList.toggle('active', idx === i));
+    }
+    function nextPage() {
+      if (currentPage < pages.length - 1) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    }
+    function prevPage() {
+      if (currentPage > 0) {
+        currentPage--;
+        showPage(currentPage);
+      }
+    }
+  </script>
 </body>
 </html>
