@@ -1,57 +1,189 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Borang Pendaftaran - Team Assaif</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background: url('IMG-20250715-WA0065.jpg') no-repeat center center fixed;
-      background-size: cover;
-      backdrop-filter: blur(2px);
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: Arial, sans-serif; }
+
+    body.intro-active {
+      background: #000;
     }
+
+    body {
+      background: #f5f5f5; /* Latar lembut selepas intro */
+      transition: background 1s ease;
+    }
+
+    .hidden { display: none; }
+
+    .fade-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 40%;
+      font-size: 2.5em;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+    }
+    #text1 { color: #FFD700; text-shadow: 0 0 15px white; }
+    #text2 { color: #fff; text-shadow: 0 0 10px #FFD700; animation-delay: 2s; }
+    #text3 {
+      color: #FFD700;
+      text-shadow: 0 0 15px white;
+      animation: fadeIn 3s forwards 4s, lightning 0.6s infinite alternate 4s;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes lightning {
+      0%, 100% { text-shadow: 0 0 20px #FFD700, 0 0 40px #fff, 0 0 60px #000; }
+      50% { text-shadow: 0 0 40px #fff, 0 0 60px #FFD700, 0 0 80px #fff; }
+    }
+
+    #background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('IMG-20250715-WA0065.jpg') no-repeat center center;
+      background-size: cover;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    #background.visible {
+      opacity: 1;
+    }
+
+    #intro {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      z-index: 2;
+      position: relative;
+      background: none;
+    }
+
+    .circle-box {
+      background: rgba(255,255,255,0.85);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      animation: float 3s ease-in-out infinite;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .circle-box img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 10px #333;
+    }
+
+    .start-btn {
+      margin-top: 20px;
+      padding: 10px 30px;
+      background: #8b4513;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    .intro-heading {
+      color: #333;
+      font-size: 1.8em;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .intro-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 30px;
+    }
+
     .form-container {
-      max-width: 600px;
+      display: none;
+      max-width: 700px;
       margin: 40px auto;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.97);
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-      animation: fadeIn 0.6s ease-in-out;
     }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: scale(0.95);}
-      to {opacity: 1; transform: scale(1);}
-    }
+
     .form-page { display: none; }
     .form-page.active { display: block; }
-    h2 { text-align: center; color: #4b2e2e; }
+    h2 { text-align: center; color: #4b2e2e; margin-bottom: 20px; }
     label { display: block; margin-top: 15px; font-weight: bold; color: #333; }
-    input[type="text"], input[type="tel"], input[type="number"],
-    textarea, select {
+    input, textarea {
       width: 100%; padding: 10px; margin-top: 5px;
       border: 1px solid #ccc; border-radius: 8px;
     }
-    textarea { resize: vertical; }
-    .checkbox-group, .radio-group { margin-top: 10px; }
-    .buttons { margin-top: 25px; display: flex; justify-content: space-between; }
-    .buttons button {
-      padding: 10px 20px; background-color: #8b4513; color: white;
-      border: none; border-radius: 8px; cursor: pointer;
-      font-weight: bold;
+
+    .buttons {
+      margin-top: 25px;
+      display: flex;
+      justify-content: space-between;
     }
-    .buttons button:hover { background-color: #5a2e0f; }
-    .submit-btn { background-color: #28a745; }
-    .submit-btn:hover { background-color: #1e7e34; }
+
+    .buttons button {
+      padding: 10px 20px;
+      border: none; border-radius: 8px;
+      font-weight: bold; cursor: pointer;
+    }
+
+    .back-btn { background: #8b4513; color: #fff; }
+    .next-btn { background: #8b4513; color: #fff; }
+    .submit-btn { background: #28a745; color: #fff; }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.85);
+      color: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      font-size: 1.5em;
+      box-shadow: 0 0 20px #000;
+      z-index: 1000;
+    }
   </style>
 </head>
-<body>
-  <form id="msForm" class="form-container" method="POST" action="#">
-    <!-- Page 1: Maklumat Asas -->
+<body class="intro-active">
+  <div id="text1" class="fade-text">SELAMAT DATANG</div>
+  <div id="text2" class="fade-text">KE</div>
+  <div id="text3" class="fade-text">ASSAIF</div>
+
+  <div id="intro">
+    <div class="intro-heading">Borang Kemasukan<br>Team Assaif</div>
+    <div class="intro-content">
+      <div class="circle-box">
+        <img src="IMG-20250715-WA0065.jpg" alt="Assaif">
+        <button class="start-btn" onclick="startForm()">DAFTAR</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="background"></div>
+
+  <form id="form" class="form-container" onsubmit="submitForm(event)">
+    <!-- Page 1 -->
     <div class="form-page active">
       <h2>MAKLUMAT ASAS</h2>
       <label>1. Nama penuh:</label><input type="text" name="nama_penuh" required>
@@ -59,87 +191,121 @@
       <label>3. Umur:</label><input type="number" name="umur" required>
       <label>4. Jantina:</label><input type="text" name="jantina" required>
       <label>5. No. Telefon (WhatsApp):</label><input type="tel" name="telefon" required>
-      <label>6. Nama Sekolah / Institusi:</label><input type="text" name="institusi" required>
-      <div class="buttons"><span></span><button type="button" onclick="nextPage()">Seterusnya</button></div>
+      <label>6. Nama Sekolah / Institusi / Organisasi:</label><input type="text" name="institusi" required>
+      <div class="buttons">
+        <button type="button" class="back-btn" disabled>Kembali</button>
+        <button type="button" class="next-btn" onclick="nextPage()">Seterusnya</button>
+      </div>
     </div>
     <!-- Page 2 -->
     <div class="form-page">
-      <h2>MAKLUMAT PENGAJIAN & LATAR BELAKANG</h2>
+      <h2>MAKLUMAT PENGAJIAN / LATAR BELAKANG</h2>
       <label>7. Tahap pendidikan terkini:</label><input type="text" name="pendidikan" required>
       <label>8. Kelas / Kursus / Fakulti:</label><input type="text" name="kelas" required>
-      <label>9. Keputusan peperiksaan terkini:</label><textarea name="peperiksaan" rows="3"></textarea>
-      <div class="buttons"><button type="button" onclick="prevPage()">Kembali</button>
-        <button type="button" onclick="nextPage()">Seterusnya</button></div>
+      <label>9. Keputusan peperiksaan terkini (pilihan):</label><textarea name="peperiksaan"></textarea>
+      <div class="buttons">
+        <button type="button" class="back-btn" onclick="prevPage()">Kembali</button>
+        <button type="button" class="next-btn" onclick="nextPage()">Seterusnya</button>
+      </div>
     </div>
     <!-- Page 3 -->
     <div class="form-page">
       <h2>MAKLUMAT PERANAN & MINAT</h2>
       <label>10. Jawatan ingin dipohon:</label><input type="text" name="jawatan" required>
       <label>11. Bidang diminati (tanda √):</label>
-      <div class="checkbox-group">
-        <label><input type="checkbox" name="minat[]" value="Dakwah"> Dakwah</label>
-        <label><input type="checkbox" name="minat[]" value="Multimedia"> Multimedia</label>
-        <label><input type="checkbox" name="minat[]" value="Kebajikan"> Kebajikan</label>
-        <label><input type="checkbox" name="minat[]" value="Program & Aktiviti"> Program & Aktiviti</label>
-        <label><input type="checkbox" name="minat[]" value="Pengurusan & Dokumentasi"> Pengurusan & Dokumentasi</label>
-        <label><input type="checkbox" name="minat[]" value="Teknikal/IT"> Teknikal/IT</label>
-      </div>
+      <label><input type="checkbox" name="minat[]" value="Dakwah"> Dakwah</label>
+      <label><input type="checkbox" name="minat[]" value="Multimedia"> Multimedia</label>
+      <label><input type="checkbox" name="minat[]" value="Kebajikan"> Kebajikan</label>
+      <label><input type="checkbox" name="minat[]" value="Program & Aktiviti"> Program & Aktiviti</label>
+      <label><input type="checkbox" name="minat[]" value="Pengurusan & Dokumentasi"> Pengurusan & Dokumentasi</label>
+      <label><input type="checkbox" name="minat[]" value="Teknikal / IT"> Teknikal / IT</label>
       <label>12. Bersedia bekerja dalam kumpulan & menerima arahan?</label>
-      <div class="radio-group">
-        <label><input type="radio" name="kerja_kumpulan" value="Ya" required> Ya</label>
-        <label><input type="radio" name="kerja_kumpulan" value="Tidak"> Tidak</label>
+      <label><input type="radio" name="kerja_kumpulan" value="Ya" required> Ya</label>
+      <label><input type="radio" name="kerja_kumpulan" value="Tidak"> Tidak</label>
+      <div class="buttons">
+        <button type="button" class="back-btn" onclick="prevPage()">Kembali</button>
+        <button type="button" class="next-btn" onclick="nextPage()">Seterusnya</button>
       </div>
-      <div class="buttons"><button type="button" onclick="prevPage()">Kembali</button>
-        <button type="button" onclick="nextPage()">Seterusnya</button></div>
     </div>
     <!-- Page 4 -->
     <div class="form-page">
       <h2>PENGALAMAN & KEMAHIRAN</h2>
-      <label>13. Pengalaman organisasi / program:</label><textarea name="pengalaman" rows="3"></textarea>
-      <label>14. Kemahiran yang anda miliki:</label><textarea name="kemahiran" rows="2"></textarea>
+      <label>13. Pengalaman organisasi / program:</label><textarea name="pengalaman"></textarea>
+      <label>14. Kemahiran yang anda miliki:</label><textarea name="kemahiran"></textarea>
       <label>15. Boleh kendalikan media sosial / reka grafik / video / pentas / mikrofon?</label>
-      <div class="radio-group">
-        <label><input type="radio" name="kendali_media" value="Ya" required> Ya</label>
-        <label><input type="radio" name="kendali_media" value="Tidak"> Tidak</label>
+      <label><input type="radio" name="kendali_media" value="Ya" required> Ya</label>
+      <label><input type="radio" name="kendali_media" value="Tidak"> Tidak</label>
+      <div class="buttons">
+        <button type="button" class="back-btn" onclick="prevPage()">Kembali</button>
+        <button type="button" class="next-btn" onclick="nextPage()">Seterusnya</button>
       </div>
-      <div class="buttons"><button type="button" onclick="prevPage()">Kembali</button>
-        <button type="button" onclick="nextPage()">Seterusnya</button></div>
     </div>
     <!-- Page 5 -->
     <div class="form-page">
       <h2>MOTIVASI & PENDIRIAN</h2>
-      <label>16. Kenapa anda berminat sertai Team Assaif?</label><textarea name="motivasi" rows="3" required></textarea>
-      <label>17. Sumbangan utama anda kepada team:</label><textarea name="sumbangan" rows="2"></textarea>
-      <label>18. Harapan anda jika diterima sebagai ahli:</label><textarea name="harapan" rows="2"></textarea>
+      <label>16. Kenapa anda berminat sertai Team Assaif?</label><textarea name="motivasi" required></textarea>
+      <label>17. Sumbangan utama anda kepada team:</label><textarea name="sumbangan"></textarea>
+      <label>18. Harapan anda jika diterima sebagai ahli:</label><textarea name="harapan"></textarea>
       <label>19. Sanggup beri komitmen masa / tenaga / idea?</label>
-      <div class="radio-group">
-        <label><input type="radio" name="komitmen" value="Ya sepenuhnya" required> Ya sepenuhnya</label>
-        <label><input type="radio" name="komitmen" value="Bergantung kepada masa"> Bergantung kepada masa</label>
-        <label><input type="radio" name="komitmen" value="Tidak pasti"> Tidak pasti</label>
+      <label><input type="radio" name="komitmen" value="Ya sepenuhnya" required> Ya sepenuhnya</label>
+      <label><input type="radio" name="komitmen" value="Bergantung kepada masa"> Bergantung kepada masa</label>
+      <label><input type="radio" name="komitmen" value="Tidak pasti"> Tidak pasti</label>
+      <label>20. Jika cabaran / konflik dalam team, apa tindakan anda?</label><textarea name="konflik"></textarea>
+      <div class="buttons">
+        <button type="button" class="back-btn" onclick="prevPage()">Kembali</button>
+        <button type="submit" class="submit-btn">Hantar</button>
       </div>
-      <label>20. Jika cabaran / konflik dalam team, apa tindakan anda?</label><textarea name="konflik" rows="2"></textarea>
-      <div class="buttons"><button type="button" onclick="prevPage()">Kembali</button>
-        <button type="submit" class="submit-btn">Hantar</button></div>
     </div>
   </form>
 
+  <div class="popup" id="popup">Terima Kasih Kerana Memilih Kami</div>
+
   <script>
+    const text1 = document.getElementById("text1");
+    const text2 = document.getElementById("text2");
+    const text3 = document.getElementById("text3");
+    const background = document.getElementById("background");
+    const intro = document.getElementById("intro");
+
+    setTimeout(() => text1.style.display = "none", 2000);
+    setTimeout(() => text2.style.display = "none", 4000);
+    setTimeout(() => {
+      text3.style.display = "none";
+      document.body.classList.remove("intro-active");
+      intro.style.display = "flex";
+    }, 7000);
+
+    function startForm() {
+      intro.style.display = "none";
+      background.classList.add("visible");
+      document.querySelector(".form-container").style.display = "block";
+    }
+
     let currentPage = 0;
     const pages = document.querySelectorAll('.form-page');
+
     function showPage(i) {
       pages.forEach((p, idx) => p.classList.toggle('active', idx === i));
     }
+
     function nextPage() {
       if (currentPage < pages.length - 1) {
         currentPage++;
         showPage(currentPage);
       }
     }
+
     function prevPage() {
       if (currentPage > 0) {
         currentPage--;
         showPage(currentPage);
       }
+    }
+
+    function submitForm(e) {
+      e.preventDefault();
+      document.querySelector(".form-container").style.display = "none";
+      document.getElementById("popup").style.display = "block";
     }
   </script>
 </body>
